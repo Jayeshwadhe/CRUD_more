@@ -4,6 +4,7 @@ const joi = require('joi')
 const jwt = require('jsonwebtoken')
 const res = require('express/lib/response')
 const { findByIdAndDelete } = require('../model/user_model')
+const { vary } = require('express/lib/response')
 
 //Signup_Api
  async function signup(req,res){
@@ -76,8 +77,19 @@ async function login(req,res){
     if (!compare) {
        return res.status(422).send({ Message: 'Please enter valid password.' })
     }
-    const token = jwt.sign({ id: loginuser.id, email: loginuser.email }, process.env.JWT_SECRET, { expiresIn: '40m' })
-     return res.status(200).send({ Message: 'User login successfully.' , Token: token  })
+    
+    var token = jwt.sign({ id: loginuser.id, email: loginuser.email, name: loginuser.name }, process.env.JWT_SECRET, { expiresIn: '40m' })
+    
+    // const userid = req.user.id
+    //     var {token}=req.body
+    // usermodel.findOneAndUpdate(
+    //     {
+    //         _id: userid
+    //     },
+        
+    //     {token},{new:true}
+    // )
+    return res.status(200).send({ Message: 'User login successfully.' , Token: token  })
      
     }
     catch(e){
@@ -113,6 +125,15 @@ async function delete_api(req,res){
 //Update_Api
 async function update_api(req,res){
     try{
+        const update_api = joi.object({
+            name: joi.string().required(),
+            mobile: joi.number().required()
+
+        })
+        const {error} = update_api.validate(req.body)
+        if(error){
+            return res.status(422).send({Message: error.details[0].message})
+        }
         const update= await (req.body)
         //console.log('1', update)
 
@@ -138,6 +159,7 @@ async function update_api(req,res){
     }
 }
 
+//Delete_Ap
 async function delete_ap(req,res){
     try{
          await usermodel.findByIdAndDelete({

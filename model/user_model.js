@@ -4,12 +4,13 @@ const mongoose = require('mongoose')
 //Create schema
 const userSchema = new mongoose.Schema({
 
-    name : {type: String,require: true},
-    email : {type: String,require: true},
-    password: {type: String,require: true},
-    mobile: {type: Number,require: true},
-    isverified:{type: Boolean,defaultvalue: false},
-    isdeleted:{type: Boolean,defaultvalue: false}
+    name : {type: String},
+    email : {type: String},
+    password: {type: String},
+    mobile: {type: Number},
+    isverified:{type: Boolean,default: false},
+    isdeleted:{type: Boolean,default: false},
+    token:{type: String}
 },
     { 
         timestamps: true 
