@@ -125,13 +125,13 @@ async function employee_update(req,res){
         }
         //updating employee
         const update_emp = await req.body
-        //console.log('1',update_emp)
+       // console.log('1',update_emp)
             if(!update_emp){
                 return res.status(422).send({Message: 'employee not updated'})
         }
 
         const userid = req.user.id
-       //console.log('2',userid)
+        //console.log('2',userid)
         //we are updating employee name and phoneno.
         const {name,phoneno} = req.body
 
@@ -147,13 +147,54 @@ async function employee_update(req,res){
     }
 }
 
+async function reset_password(req,res){
+    try{
+        let reset_password = joi.object({
+            oldpwd: joi.string().pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})")).required(),
+            newpwd: joi.string().pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})")).required(),
+            confirmpwd: joi.ref('newpwd')
+        })
+        const{error} = reset_password.validate(req.body)
+        if(error){
+            return res.status(422).send({Message: error.details[0].message})
+        }
 
+        //changing password from body
+        const userid = req.user.id
+       // console.log("1",userid)
+        const field = { oldpwd, newpwd, confirmpwd } = req.body
+        //console.log("2",field)
+        const updatedata = await e_usermodel.findOne(
+            
+            { _id: userid })
+            //console.log("3",updatedata)
 
+            const compare =  bcrypt.compareSync(oldpwd, updatedata.password)
+            //console.log("4",compare)
+            if(!compare){            
+            return res.status(422).send({Message: 'please enter valid credentials.'})
+    }
+ 
+    const salt = bcrypt.genSaltSync(10)
+    const hash = bcrypt.hashSync(newpwd,salt)
 
+     await e_usermodel.updateOne(
+        {password: hash},
+        {_id: userid})
+
+        //console.log("5",e_usermodel)
+        //public message
+        return res.status(200).send({ Message: 'password changed successfully.' })
+    }    
+    catch(e){
+        return res.status(500).send({Message: `something went wrong, ${e}`})
+    }
+}
 
 
 module.exports = {
     Register,
     login,
-    employee_update
+    employee_update,
+    reset_password
 }
