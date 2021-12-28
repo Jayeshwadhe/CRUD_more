@@ -5,16 +5,16 @@ const mongoose = require('mongoose')
 
 const e_userschema = new mongoose.Schema({
 
-    serialnumber:{type: Number},
+    //serialnumber:{type: Number},
     name:{type: String},
     email: {type: String},
-    salt:{type:String},
+    //salt:{type:String},
     password: {type: String},
     phoneno:{type: Number},
     salary:{type:Number},
     gender:{type: String},
-    dob:{type:Date},
-    state: {type: String},
+    //dob:{type:Date},
+    //state: {type: String},
     city: {type: String}
 },
 {
