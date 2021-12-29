@@ -39,7 +39,7 @@ async function Register(req, res) {
       phoneno,
       salary,
       gender,
-     //dob,
+      //dob,
       //state,
       city,
     } = req.body;
@@ -218,7 +218,7 @@ async function reset_password(req, res) {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(newpwd, salt);
 
-    await e_usermodel.updateOne( { _id: userid },{ password: hash } );
+    await e_usermodel.updateOne({ _id: userid }, { password: hash });
 
     //console.log("5",e_usermodel)
     return res.status(200).send({ Message: "password changed successfully." });
@@ -227,29 +227,77 @@ async function reset_password(req, res) {
   }
 }
 
-//addEmployeeApi!
-async function EmployeeDetails(req,res){
-    try{
-          const employee = await e_usermodel.find().count()
-        console.log("Total number of employee : ",employee)
-        return res.status(200).send({ 'Total number of employee': employee })
+//EmployeeDetailsApi!
+//TotalNoOfEmployee
+async function EmployeeDetails(req, res) {
+  try {
+    const employee = await e_usermodel.find().count();
+    console.log("Total number of employee : ", employee);
+    // return res.status(200).send({ Employee: employee })
 
-        //const tSalary = await e_usermodel.
-    } 
-    catch(e){
-        return res.status(500).send({Message: `something went wrong, ${e}`})
-    }
+    //TotalSalaryOfEmployee
+    const tsalary = await e_usermodel.aggregate([
+      {
+        $group: {
+          // _id: {name: "$name",salary: "$salary", gender: "$gender"},
+          _id: null,
+          Tsalary: {
+            $sum: "$salary",
+          },
+        },
+      },
+    ]);
+    console.log("2", tsalary);
+
+    //AvgOfTotalSalary
+    const AvgSalary = await e_usermodel.aggregate([
+      {
+        $group: {
+          // _id: {name: "$name",salary: "$salary", gender: "$gender"},
+          _id: null,
+          Asalary: {
+            $avg: "$salary",
+          },
+        },
+      },
+    ]);
+    console.log("3", AvgSalary);
+
+    //TotalGenderMaleAndFemale
+    const gender = await e_usermodel.aggregate([
+      {
+        $project: {
+          male: { $cond: [{ $eq: ["$gender", "male"] }, 1, 0] },
+          female: { $cond: [{ $eq: ["$gender", "female"] }, 1, 0] },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          male: { $sum: "$male" },
+          female: { $sum: "$female" },
+          total: { $sum: 1 },
+        },
+      },
+    ]);
+    console.log("4", gender);
+    return res
+      .status(200)
+      .send({
+        TotalSalary: tsalary,
+        Employee: employee,
+        Gender: gender,
+        AvgSalary: AvgSalary,
+      });
+  } catch (e) {
+    return res.status(500).send({ Message: `something went wrong, ${e}` });
+  }
 }
-
-
-
-
-
 
 module.exports = {
   Register,
   login,
   employee_update,
   reset_password,
-  EmployeeDetails
+  EmployeeDetails,
 };

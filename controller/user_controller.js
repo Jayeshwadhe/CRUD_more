@@ -78,7 +78,7 @@ async function login(req,res){
        return res.status(422).send({ Message: 'Please enter valid password.' })
     }
     
-    var token = jwt.sign({ id: loginuser.id, email: loginuser.email, name: loginuser.name }, process.env.JWT_SECRET, { expiresIn: '40m' })
+    var token = jwt.sign({ id: loginuser.id, email: loginuser.email, name: loginuser.name }, process.env.JWT_SECRET, { expiresIn: '90m' })
     
     // const userid = req.user.id
     //     var {token}=req.body
