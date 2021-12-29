@@ -13,7 +13,7 @@ const e_userschema = new mongoose.Schema({
     phoneno:{type: Number},
     salary:{type:Number},
     gender:{type: String},
-    //dob:{type:Date},
+    birthday: {type: Date},
     //state: {type: String},
     city: {type: String}
 },

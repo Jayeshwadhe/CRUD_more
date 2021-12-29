@@ -22,7 +22,7 @@ async function Register(req, res) {
       phoneno: joi.number().required(),
       salary: joi.number().required(),
       gender: joi.string().required(),
-      //dob: joi.date().required(),
+      birthday: joi.date().required(),
       //state: joi.string().required(),
       city: joi.string().required(),
     });
@@ -39,7 +39,7 @@ async function Register(req, res) {
       phoneno,
       salary,
       gender,
-      //dob,
+      birthday,
       //state,
       city,
     } = req.body;
@@ -62,7 +62,7 @@ async function Register(req, res) {
       phoneno,
       salary,
       gender,
-      //dob,
+      birthday,
       //state,
       city,
     });
@@ -122,6 +122,7 @@ async function login(req, res) {
         salary: loginuser.salary,
         gender: loginuser.gender,
         state: loginuser.state,
+        birthday: loginuser.birthday,
         city: loginuser.city,
       },
       process.env.JWT_SECRET,
@@ -281,14 +282,54 @@ async function EmployeeDetails(req, res) {
       },
     ]);
     console.log("4", gender);
-    return res
-      .status(200)
-      .send({
-        TotalSalary: tsalary,
-        Employee: employee,
-        Gender: gender,
-        AvgSalary: AvgSalary,
-      });
+    return res.status(200).send({
+      TotalSalary: tsalary,
+      Employee: employee,
+      Gender: gender,
+      AvgSalary: AvgSalary,
+    });
+  } catch (e) {
+    return res.status(500).send({ Message: `something went wrong, ${e}` });
+  }
+}
+
+async function EmpBday(req, res) {
+  try {
+    const EmpBday = await e_usermodel
+      // .find(
+      //   {
+      //     $group: {
+      //       _id: null,
+      //       birthday: {$gte: "$birthday"}}
+      //     },
+
+      // ).count()
+      .aggregate([
+        {
+          $project: {
+            m: { $month: "$birthday" },
+            d: { $dayOfMonth: "$birthday" },
+          },
+        },
+        {
+          $match: {
+            $or: any,
+          },
+        },
+        
+        {
+          $group: {
+            _id: {
+              month: "$m",
+              day: "$d",
+            },
+            userids: { $push: "$_id" },
+          },
+        },
+      ]);
+
+    console.log("1", EmpBday);
+    return res.status(200).send({ EmployeeBirthday: EmpBday });
   } catch (e) {
     return res.status(500).send({ Message: `something went wrong, ${e}` });
   }
@@ -300,4 +341,5 @@ module.exports = {
   employee_update,
   reset_password,
   EmployeeDetails,
+  EmpBday,
 };
