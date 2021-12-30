@@ -151,13 +151,13 @@ async function employee_update(req, res) {
     }
     //updatingEmployee
     const update_emp = await req.body;
-    // console.log('1',update_emp)
+
     if (!update_emp) {
       return res.status(422).send({ Message: "employee not updated" });
     }
 
     const userid = req.user.id;
-    //console.log('2',userid)
+
     //we are updating employee name and phoneno.
     const { name, phoneno } = req.body;
 
@@ -166,7 +166,7 @@ async function employee_update(req, res) {
       { name, phoneno },
       { new: true }
     );
-    //console.log('3',updatedata)
+
     return res.status(200).send({ Message: "Employee updated successfully" });
   } catch (e) {
     return res.status(500).send({ Message: `something went wrong, ${e}` });
@@ -202,14 +202,13 @@ async function reset_password(req, res) {
 
     //changing password from body
     const userid = req.user.id;
-    // console.log("1",userid)
+
     const field = ({ oldpwd, newpwd, confirmpwd } = req.body);
-    //console.log("2",field)
+
     const user = await e_usermodel.findOne({ _id: userid });
-    //console.log("3",updatedata)
 
     const compare = bcrypt.compareSync(oldpwd, user.password);
-    //console.log("4",compare)
+
     if (!compare) {
       return res
         .status(422)
@@ -233,14 +232,11 @@ async function reset_password(req, res) {
 async function EmployeeDetails(req, res) {
   try {
     const employee = await e_usermodel.find().count();
-    console.log("Total number of employee : ", employee);
-    // return res.status(200).send({ Employee: employee })
 
     //TotalSalaryOfEmployee
     const tsalary = await e_usermodel.aggregate([
       {
         $group: {
-          // _id: {name: "$name",salary: "$salary", gender: "$gender"},
           _id: null,
           Tsalary: {
             $sum: "$salary",
@@ -248,13 +244,11 @@ async function EmployeeDetails(req, res) {
         },
       },
     ]);
-    console.log("2", tsalary);
 
     //AvgOfTotalSalary
     const AvgSalary = await e_usermodel.aggregate([
       {
         $group: {
-          // _id: {name: "$name",salary: "$salary", gender: "$gender"},
           _id: null,
           Asalary: {
             $avg: "$salary",
@@ -262,13 +256,12 @@ async function EmployeeDetails(req, res) {
         },
       },
     ]);
-    console.log("3", AvgSalary);
 
     //TotalGenderMaleAndFemale
     const gender = await e_usermodel.aggregate([
       {
         $project: {
-          male: { $cond: [{ $eq: ["$gender", "male"] }, 1, 0] },
+         male: { $cond: [{ $eq: ["$gender", "male"] }, 1, 0] },
           female: { $cond: [{ $eq: ["$gender", "female"] }, 1, 0] },
         },
       },
@@ -281,18 +274,19 @@ async function EmployeeDetails(req, res) {
         },
       },
     ]);
-    console.log("4", gender);
+
     return res.status(200).send({
-      TotalSalary: tsalary,
+      TotalSalary: tsalary[0].Tsalary,
       Employee: employee,
       Gender: gender,
-      AvgSalary: AvgSalary,
+      AvgSalary: AvgSalary[0].Asalary,
     });
   } catch (e) {
     return res.status(500).send({ Message: `something went wrong, ${e}` });
   }
 }
 
+//EmployeeBirthdayApi
 async function EmpBday(req, res) {
   try {
     const EmpBday = await e_usermodel
@@ -316,7 +310,7 @@ async function EmpBday(req, res) {
             $or: any,
           },
         },
-        
+
         {
           $group: {
             _id: {
@@ -328,7 +322,6 @@ async function EmpBday(req, res) {
         },
       ]);
 
-    console.log("1", EmpBday);
     return res.status(200).send({ EmployeeBirthday: EmpBday });
   } catch (e) {
     return res.status(500).send({ Message: `something went wrong, ${e}` });
