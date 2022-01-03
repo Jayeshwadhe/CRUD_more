@@ -1,29 +1,33 @@
 {
-  "swagger": "2.0",
-
+  "openapi": "3.0.0",
   "info": {
     "version": "1.0.0",
-
-    "title": "userRegistration",
-
+    "title": "Authentication Api",
     "license": {
-      "name": "Employee Registration"
+      "name": "Employee Registartion API"
     }
   },
-
-  "host": "localhost:3000",
-
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
   "schemes": ["http", "https"],
-
   "produces": ["application/json"],
-
   "securityDefinitions": {
     "APIKeyHeader": {
       "type": "apiKey",
-
       "in": "header",
-
-      "name": "authenticate"
+      "name": "Authorization"
+    }    
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
     }
   },
   "security": [
@@ -32,52 +36,39 @@
     }
   ],
   "paths": {
-    "/register": {
+    "/Register": {
       "post": {
         "summary": "Employee Register",
-
         "tags": ["Employee"],
-
-        "description": "Employee Registration",
-
+        "description": "OK (successfully register)",
         "parameters": [
           {
             "name": "Employee Registration",
-
             "in": "body",
-
             "description": "Employee Registration",
-
             "schema": {
               "properties": {
                 "name": {
                   "type": "string"
                 },
-
                 "email": {
                   "type": "string"
                 },
-
                 "password": {
                   "type": "string"
                 },
-
                 "phoneno": {
                   "type": "string"
                 },
-
                 "salary": {
                   "type": "number"
                 },
-
                 "gender": {
                   "type": "string"
                 },
-
                 "birthday": {
                   "type": "string"
                 },
-
                 "city": {
                   "type": "string"
                 }
@@ -107,62 +98,222 @@
           }
         }
       }
-    }
-  },
-  "/login": {
-    "post": {
-      "summary": "Employee Register",
+    },
+    "/login": {
+      "post": {
+        "summary": "Employee Register",
 
-      "tags": ["Employee"],
+        "tags": ["Employee"],
 
-      "description": "Employee Registration",
+        "description": "Employee Registration",
 
-      "parameters": [
-        {
-          "name": "Employee Registration",
+        "parameters": [
+          {
+            "name": "Employee Registration",
 
-          "in": "body",
+            "in": "body",
 
-          "description": "Employee Registration",
+            "description": "Employee Registration",
 
-          "schema": {
-            "properties": {              
+            "schema": {
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
 
-              "email": {
-                "type": "string"
-              },
-
-              "password": {
-                "type": "string"
+                "password": {
+                  "type": "string"
+                }
               }
+            }
+          }
+        ],
+        "responses": {
+          "403": {
+            "description": "Access Denied"
+          },
 
-               }
+          "404": {
+            "description": "please login again!"
+          },
+
+          "401": {
+            "description": "This student already exists"
+          },
+
+          "200": {
+            "description": "Login Success"
+          },
+
+          "500": {
+            "description": "Something went wrong"
           }
         }
-      ],
-      "responses": {
-        "403": {
-          "description": "Access Denied"
-        },
+      }
+    },
+    "/employee_update": {
+      "put": {
+        "summary": "Employee Register",
 
-        "404": {
-          "description": "please login again!"
-        },
+        "tags": ["Employee"],
 
-        "401": {
-          "description": "This student already exists"
-        },
+        "description": "Employee Registration",
 
-        "200": {
-          "description": "Login Success"
-        },
+        "parameters": [
+          {
+            "name": "Employee Registration",
 
-        "500": {
-          "description": "Something went wrong"
+            "in": "body",
+
+            "description": "Employee Registration",
+
+            "schema": {
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+
+                "phoneno": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "403": {
+            "description": "Access Denied"
+          },
+
+          "404": {
+            "description": "please login again!"
+          },
+
+          "401": {
+            "description": "This student already exists"
+          },
+
+          "200": {
+            "description": "Login Success"
+          },
+
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
+    },
+    "/reset_password": {
+      "put": {
+        "summary": "Employee Register",
+
+        "tags": ["Employee"],
+
+        "description": "Employee Registration",
+
+        "parameters": [
+          {
+            "name": "Employee Registration",
+
+            "in": "body",
+
+            "description": "Employee Registration",
+
+            "schema": {
+              "properties": {
+                "oldpwd": {
+                  "type": "string"
+                },
+
+                "newpwd": {
+                  "type": "string"
+                },
+
+                "confirmpwd": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "403": {
+            "description": "Access Denied"
+          },
+
+          "404": {
+            "description": "please login again!"
+          },
+
+          "401": {
+            "description": "This student already exists"
+          },
+
+          "200": {
+            "description": "Login Success"
+          },
+
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
+    },
+    "/EmployeeDetails": {
+      "get": {
+        "summary": "get all user",
+        "tags": ["User"],
+        "description": "get all user",
+        "parameters": [],
+        "responses": {
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "success"
+          },
+          "401": {
+            "description": "This user already exists"
+          },
+          "200": {
+            "description": " User Login Success"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "505": {
+            "description": "HTTP Version Not Support"
+          }
+        }
+      }
+    },
+    "/EmpBday": {
+      "get": {
+        "summary": "get all user",
+        "tags": ["User"],
+        "description": "get all user",
+        "parameters": [],
+        "responses": {
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "success"
+          },
+          "401": {
+            "description": "This user already exists"
+          },
+          "200": {
+            "description": " User Login Success"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "505": {
+            "description": "HTTP Version Not Support"
+          }
         }
       }
     }
   }
 }
-  
-
