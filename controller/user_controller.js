@@ -24,6 +24,7 @@ const { vary } = require('express/lib/response')
          }
 
          const { name, email, password, mobile } = req.body
+         console.log(req.body)
          
          const finduser = await usermodel.findOne({
              email:email
@@ -51,17 +52,17 @@ const { vary } = require('express/lib/response')
      }
  }
 
-async function Ulogin(req,res){
+async function login(req,res){
     console.log('ll')
 
     try{
-        console.log('ww')
         
-        const Ulogin = joi.object({
+        
+        const login = joi.object({
             email: joi.string().required(),
             password: joi.string().pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})")).required()
         })
-        const { error } = Ulogin.validate(req.body)
+        const { error } = login.validate(req.body)
         
         if(error){
             return res.status(422).send({Message: error.details[0].message})
@@ -70,7 +71,7 @@ async function Ulogin(req,res){
         const { email, password } = req.body
         
         
-console.log('ss',req.body)
+
         const loginuser = await usermodel.findOne({
             email:email
         })
@@ -101,7 +102,7 @@ console.log('ss',req.body)
      
     }
     catch(e){
-        console.log(e)
+        
         return res.status(500).send({Message:`something went wrong, ${e}`})
     }
 }
@@ -183,7 +184,7 @@ async function delete_ap(req,res){
 
  module.exports = {
      signup,
-     Ulogin,
+     login,
      delete_api,
      update_api,
      delete_ap
