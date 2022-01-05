@@ -9,7 +9,8 @@ const { vary } = require('express/lib/response')
 //Signup_Api
  async function signup(req,res){
      try{
-         //console.log(req)
+         console.log(req)
+         
 
          const signup = joi.object({
              name: joi.string().required(),
@@ -50,27 +51,33 @@ const { vary } = require('express/lib/response')
      }
  }
 
-//Login_Api
-async function login(req,res){
+async function Ulogin(req,res){
+    console.log('ll')
+
     try{
+        console.log('ww')
         
-        const login = joi.object({
+        const Ulogin = joi.object({
             email: joi.string().required(),
             password: joi.string().pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})")).required()
         })
-        const { error } = login.validate(req.body)
+        const { error } = Ulogin.validate(req.body)
+        
         if(error){
             return res.status(422).send({Message: error.details[0].message})
         }
         
         const { email, password } = req.body
-
+        
+        
+console.log('ss',req.body)
         const loginuser = await usermodel.findOne({
             email:email
         })
+        console.log(loginuser)
 
         if(!loginuser){
-            return res.status(422).send({Message:'user not found'})
+            return res.status(422).send({Message:'user not foundddd'})
         }
         //comparing the password singup and login
         const compare = bcrypt.compareSync(password, loginuser.password)
@@ -90,6 +97,7 @@ async function login(req,res){
     //     {token},{new:true}
     // )
     return res.status(200).send({ Message: 'User login successfully.' , Token: token  })
+    
      
     }
     catch(e){
@@ -175,7 +183,7 @@ async function delete_ap(req,res){
 
  module.exports = {
      signup,
-     login,
+     Ulogin,
      delete_api,
      update_api,
      delete_ap

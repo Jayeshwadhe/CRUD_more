@@ -101,7 +101,7 @@ async function login(req, res) {
       email: email,
     });
     if (!loginuser) {
-      return res.status(422).send({ Message: "user not found" });
+      return res.status(422).send({ Message: "user not founddd" });
     }
 
     //comparing the register and login password from bcrypt method!
@@ -136,7 +136,7 @@ async function login(req, res) {
     return res.status(500).send({ Message: `something went wrong, ${e}` });
   }
 }
-
+/**
 //updatEmployeeProfile Api
 async function employee_update(req, res) {
   try {
@@ -326,13 +326,13 @@ async function EmpBday(req, res) {
   } catch (e) {
     return res.status(500).send({ Message: `something went wrong, ${e}` });
   }
-}
+} */
 
 module.exports = {
   Register,
   login,
-  employee_update,
-  reset_password,
-  EmployeeDetails,
-  EmpBday,
+  // employee_update,
+  // reset_password,
+  // EmployeeDetails,
+  // EmpBday,
 };
