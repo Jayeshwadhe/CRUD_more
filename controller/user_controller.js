@@ -24,7 +24,6 @@ const { vary } = require('express/lib/response')
          }
 
          const { name, email, password, mobile } = req.body
-         console.log(req.body)
          
          const finduser = await usermodel.findOne({
              email:email
@@ -53,18 +52,11 @@ const { vary } = require('express/lib/response')
  }
 
 async function login(req,res){
-<<<<<<< HEAD
     //console.log('ll')
-=======
-    console.log('ll')
->>>>>>> bbfcccdb6b1816871542ada5f074952d5a9485fa
 
     try{
+        console.log('ww')
         
-<<<<<<< HEAD
-=======
-        
->>>>>>> bbfcccdb6b1816871542ada5f074952d5a9485fa
         const login = joi.object({
             email: joi.string().required(),
             password: joi.string().pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})")).required()
@@ -78,11 +70,7 @@ async function login(req,res){
         const { email, password } = req.body
         
         
-<<<<<<< HEAD
 //console.log('ss',req.body)
-=======
-
->>>>>>> bbfcccdb6b1816871542ada5f074952d5a9485fa
         const loginuser = await usermodel.findOne({
             email:email
         })
@@ -113,11 +101,7 @@ async function login(req,res){
      
     }
     catch(e){
-<<<<<<< HEAD
         //console.log(e)
-=======
-        
->>>>>>> bbfcccdb6b1816871542ada5f074952d5a9485fa
         return res.status(500).send({Message:`something went wrong, ${e}`})
     }
 }
